@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import { Dispatch } from 'redux';
 
 import {reducers} from "../store/reducers";
-import {State} from "../store/reducers/todoReducer";
+import {IState} from "../store/reducers/mainReducer";
 import * as actions from '../store/actions';
 
 import './styles.css';
@@ -16,7 +16,7 @@ interface StateProps{
 
 function Todo({addTodo, data}:StateProps) {
 
-    const datas:State = data.reducerTodo;
+    const datas:IState = data.reducerMain;
 
     const inputRef = useRef<HTMLInputElement>(null);
 

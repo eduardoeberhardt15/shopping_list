@@ -1,6 +1,6 @@
 import {Reducer} from 'redux';
 
-interface IState{
+export interface IState{
     data:[],
     error:boolean,
     loading:boolean
@@ -13,8 +13,15 @@ const INITIAL_STATE:IState={
     loading:false
 };
 
-type typeActions = 
-     "LOAD_REQUEST" |
+
+export const Types={
+    LOAD_REQUEST:"LOAD_REQUEST",
+    LOAD_SUCCESS:"LOAD_SUCCESS",
+    LOAD_FAILURE:"LOAD_FAILURE"
+}
+
+export type typeActions = 
+    "LOAD_REQUEST" |
     "LOAD_SUCCESS" |
     "LOAD_FAILURE";
 

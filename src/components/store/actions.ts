@@ -1,4 +1,5 @@
-export function addTodo(todo:any){
+export const addTodo = (todo:any) =>{
+    
     return(
         {
             type:"ADD_TODO",

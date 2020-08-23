@@ -998,7 +998,7 @@
     xcode "^3.0.0"
     xml-js "^1.6.11"
 
-"@expo/vector-icons@^10.0.2":
+"@expo/vector-icons@^10.0.2", "@expo/vector-icons@^10.2.0":
   version "10.2.0"
   resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-10.2.0.tgz#3c70656683a6a873e18efc00bc61fc160a80dc55"
   integrity sha512-dYe0SW/xbzWRtWG7i1pc3QPMGMbdReVgP02XlwMkS4srAAjF0cZQVa3ZgZ6qzxI+OzKudpDXZRmENNth/b263g==
@@ -2516,6 +2516,11 @@ expo-location@~8.2.1:
   integrity sha512-MixKapt3nijAxyjIISscBzdKi8bwh0H/dWYsL2mCofrjguFHOh2gP07h95902lekb7NVqybl5AIQRW5cvrG4rQ==
   dependencies:
     invariant "^2.2.4"
+
+expo-network@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/expo-network/-/expo-network-2.2.1.tgz#d72308d1636a814b6809012bb81eb8646cab0acd"
+  integrity sha512-O76Vh3t/ZC1ZMR0/JNOvaFmiDckP3nbGWSy5fcULf9Qgi9qYqksf7PssDAlo9cGKMD4g/dUTkrQn9QIzdxZCjQ==
 
 expo-permissions@~9.0.1:
   version "9.0.1"

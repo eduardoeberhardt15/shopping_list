@@ -6,7 +6,7 @@ import { Types } from '../reducers/mainReducer';
 
 export function* load() {
   try {
-
+    
     yield
     //const response = yield call(api.get, 'repos/user');
 
@@ -18,12 +18,14 @@ export function* load() {
 
 export function* addTodo(arg:any) { 
   try {
-
-    const datas = yield select(reducer => reducer.reducerTodo.data); 
+    
+    yield put({type: "LOAD_REQUEST"});
+    const datas = yield select(reducer =>reducer.reducerMain.data); 
+    console.log(datas);
     
    yield put({type:Types.LOAD_SUCCESS, payload:{data: [...datas, arg.payload.data]}});
   } catch (err) {
-    //yield put(loadFailure());
+    yield put({type: "LOAD_FAILURE"});
   }
 }
 

@@ -1,14 +1,14 @@
 import {Reducer} from 'redux';
 
 export interface IState{
-    data:[],
+    data:string[],
     error:boolean,
     loading:boolean
 }
 
 const INITIAL_STATE:IState={
 
-    data:[],
+    data:["123"],
     error:false,
     loading:false
 };
@@ -17,7 +17,8 @@ const INITIAL_STATE:IState={
 export const Types={
     LOAD_REQUEST:"LOAD_REQUEST",
     LOAD_SUCCESS:"LOAD_SUCCESS",
-    LOAD_FAILURE:"LOAD_FAILURE"
+    LOAD_FAILURE:"LOAD_FAILURE",
+    ADD_TODO:"ADD_TODO",
 }
 
 export type typeActions = 
@@ -25,11 +26,11 @@ export type typeActions =
     "LOAD_SUCCESS" |
     "LOAD_FAILURE";
 
-interface IPayload{
+export interface IPayload{
     data:[]
 }
 
-interface IAction{
+export interface IAction{
     type: typeActions,
     payload:IPayload
 }
@@ -38,13 +39,13 @@ export const reducer:Reducer<IState, IAction> = (state= INITIAL_STATE, action:IA
     
     switch(action.type){
 
-        case "LOAD_REQUEST":
+        case "LOAD_REQUEST": 
             return { ...state, loading:true};
 
-        case "LOAD_SUCCESS":
+        case "LOAD_SUCCESS": 
             return { ...state, loading:false, error:false, data:action.payload.data};
 
-        case "LOAD_FAILURE":
+        case "LOAD_FAILURE": 
             return { ...state, error:true, data:[]};
 
         default:

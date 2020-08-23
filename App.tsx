@@ -3,14 +3,17 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import {Provider} from 'react-redux';
 import store from "./src/components/store";
+import AutoCompleteSelect from './src/components/AutoCompleteSelect';
+
 
 export default function App() {
   return (
     
     <View style={styles.container}>
       <Provider store={store}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+      <Text>Testando</Text>
       <StatusBar style="auto" />
+      <AutoCompleteSelect/>
       </Provider>
     </View>
   );
@@ -18,9 +21,12 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    marginTop:100,
+    marginLeft:20,
+    width:200,
+    /*flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center',*/
   },
 });

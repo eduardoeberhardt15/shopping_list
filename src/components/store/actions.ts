@@ -9,3 +9,27 @@ export const addTodo = (todo:any) =>{
         }
     )
 }
+
+export const updateTodo = (todo:any) =>{
+    
+    return(
+        {
+            type:"UPDATE_TODO",
+            payload:{
+                data:todo
+            }
+        }
+    )
+}
+
+export const removeTodo = (todo:any) =>{
+    
+    return(
+        {
+            type:"REMOVE_TODO",
+            payload:{
+                data:todo
+            }
+        }
+    )
+}

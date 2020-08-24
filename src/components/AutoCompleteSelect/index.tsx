@@ -9,6 +9,7 @@ import { Dispatch } from 'redux';
 import {connect} from 'react-redux';
 import * as actions from '../store/actions';
 import {reducers} from "../store/reducers";
+import {IList } from '../store/reducers/mainReducer';
 
 import styles from "./styles";
 
@@ -20,26 +21,21 @@ const connection = await Network.getNetworkStateAsync();
       if(!connection.isConnected || !connection.isInternetReachable)
 */
 
-
- interface IList{
-   id: number,
-   value:string
- }
  
 const list:IList[] = [
-  {id:1, value:"Brasil"},
-  {id:2, value:"EUA"},
-  {id:3, value:"Mexico"},
-  {id:4, value:"Canada"},
-  {id:5, value:"Alemanha"},
-  {id:6, value:"Espanha"},
-  {id:7, value:"Argentina"},
-  {id:8, value:"Colombia"},
-  {id:9, value:"Chile"},
-  {id:10, value:"Italia"},
-  {id:11, value:"Portugal"},
-  {id:12, value:"Usa"},
-  {id:13, value:"Estados Unidos"},
+  {id:1, text:"Brasil"},
+  {id:2, text:"EUA"},
+  {id:3, text:"Mexico"},
+  {id:4, text:"Canada"},
+  {id:5, text:"Alemanha"},
+  {id:6, text:"Espanha"},
+  {id:7, text:"Argentina"},
+  {id:8, text:"Colombia"},
+  {id:9, text:"Chile"},
+  {id:10, text:"Italia"},
+  {id:11, text:"Portugal"},
+  {id:12, text:"Usa"},
+  {id:13, text:"Estados Unidos"},
 
 ];
 
@@ -51,7 +47,7 @@ interface StateProps{
 const AutoCompleteSelect = ({addTodo, data}:StateProps) =>{ 
 
   const [dataList, setDataList] = useState<IList[]>([]);
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState<IList>({id:0, text:""});
 
   function loadData(){
 
@@ -59,12 +55,16 @@ const AutoCompleteSelect = ({addTodo, data}:StateProps) =>{
 
   function search(text:string){
 
-    setInputText(text);
+    setInputText(
+      {
+      id:0, 
+      text
+    });
 
     text=text.toLowerCase();
     if(text.length>2){
     
-      const data = list.filter(l=>l.value.toLowerCase().indexOf(text)>=0);
+      const data = list.filter(l=>l.text.toLowerCase().indexOf(text)>=0);
       setDataList(data);
     }
     else{
@@ -73,10 +73,30 @@ const AutoCompleteSelect = ({addTodo, data}:StateProps) =>{
 
   }
 
-  function fillInput(text:string){
+  function fillInput(id:number, text:string){
 
-    setInputText(text);
+    setInputText(
+      {
+        id, 
+        text,
+        complete:false,
+      }
+    );
+
     setDataList([]);
+  }
+
+  function addNewTodo(){
+    if(inputText.text.length>2){
+      addTodo(inputText);
+
+      setInputText(
+        {
+          id:0, 
+          text:"",
+        }
+      );
+    }
   }
 
   return(
@@ -86,14 +106,14 @@ const AutoCompleteSelect = ({addTodo, data}:StateProps) =>{
     >
       <View style={styles.viewInputIcon}>
           <TextInput 
-            value={inputText}
+            value={inputText.text}
             style={styles.textSearch} 
             placeholder="Search"
             onChangeText={text => search(text)} 
             returnKeyType="search"
             keyboardType="default"
           />
-          <TouchableOpacity onPress={()=>{addTodo("ok")}}>
+          <TouchableOpacity onPress={()=>{addNewTodo()}}>
           <Ionicons name="ios-add-circle" size={24} color="blue" />
           </TouchableOpacity>
        </View>
@@ -112,9 +132,9 @@ const AutoCompleteSelect = ({addTodo, data}:StateProps) =>{
                   
                     return(
                       <TouchableOpacity style={styles.textItem} 
-                      onPress={()=>fillInput(item.value)}
+                      onPress={()=>fillInput(item.id, item.text)}
                       hitSlop={{ top: 20, bottom: 20, left: 50, right: 50 }}>
-                        <Text>{item.value}</Text>
+                        <Text>{item.text}</Text>
                       </TouchableOpacity>
                     
                     );

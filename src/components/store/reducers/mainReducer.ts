@@ -1,14 +1,20 @@
 import {Reducer} from 'redux';
 
+export interface IList{
+    id: number,
+    text:string,
+    complete?:boolean,
+    value?:number
+}
 export interface IState{
-    data:string[],
+    data:IList[],
     error:boolean,
     loading:boolean
 }
 
 const INITIAL_STATE:IState={
 
-    data:["123"],
+    data:[{id:0, text:"teste", value:0, complete:false}],
     error:false,
     loading:false
 };
@@ -19,6 +25,8 @@ export const Types={
     LOAD_SUCCESS:"LOAD_SUCCESS",
     LOAD_FAILURE:"LOAD_FAILURE",
     ADD_TODO:"ADD_TODO",
+    UPDATE_TODO:"UPDATE_TODO",
+    REMOVE_TODO:"REMOVE_TODO",
 }
 
 export type typeActions = 
@@ -27,7 +35,7 @@ export type typeActions =
     "LOAD_FAILURE";
 
 export interface IPayload{
-    data:[]
+    data:IList[]
 }
 
 export interface IAction{

@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import {Provider} from 'react-redux';
 import store from "./src/components/store";
 import AutoCompleteSelect from './src/components/AutoCompleteSelect';
+import List from './src/components/List';
 
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
       <Text>Testando</Text>
       <StatusBar style="auto" />
       <AutoCompleteSelect/>
+      <List/>
       </Provider>
     </View>
   );

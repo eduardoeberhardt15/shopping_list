@@ -1,21 +1,19 @@
 import {StyleSheet} from "react-native";
 
 const styles = StyleSheet.create({
-    container: {/*
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',*/
+    container: {
+        width:"80%",
     },
 
     flatList:{
-        width:"100%",
+        width:"80%",
         marginTop:2,
     },
 
     viewInputIcon:{
         flexDirection:"row",
         alignItems:"center",
+        justifyContent:"space-between",
     },
 
     textSearch:{
@@ -25,7 +23,7 @@ const styles = StyleSheet.create({
         borderRadius:8,
         padding:5,
         paddingLeft:15,
-        marginRight:5,
+        marginRight:15,
     },
 
     textItem:{

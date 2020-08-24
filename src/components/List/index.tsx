@@ -33,7 +33,7 @@ const List = ({removeTodo, updateTodo, data}:StateProps) => {
     return (
         <FlatList
         data={data.reducerMain.data}
-        style={{}}
+        style={styles.container}
         keyExtractor={item=>item.id.toString()}
         /*numColumns={2}
         showsVerticalScrollIndicator={false}*/

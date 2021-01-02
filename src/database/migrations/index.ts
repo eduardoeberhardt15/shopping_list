@@ -1,45 +1,74 @@
 import connection from '../connection';
 
 const sql = [
-    'DROP TABLE IF EXISTS list_item',
-    'DROP TABLE IF EXISTS list',
+    
+    `create table if not exists products (
+        id integer primary key autoincrement,
+        name text unique not null,
+        category text not null);`,
+
     `create table if not exists list (
         id integer primary key autoincrement,
-        status int,
-        date datetime,
-        user text);`,
+        status int not null,
+        date datetime not null,
+        user text not null);`,
+
     `create table if not exists list_item (
         id integer primary key autoincrement, 
-        name text, 
+        name int, 
         price double, 
         list int, 
-        foreign key (list) references list (id));`,
-    `insert into list values (null, 0, '${new Date()}', 1)`,
-    "insert into list_item values (null, 'arroz', 15.5, 1)"
+        foreign key (list) references list (id),
+        foreign key (name) references products (id));`,
+];
+
+const sqlReset = [
+    'DROP TABLE IF EXISTS list_item',
+    'DROP TABLE IF EXISTS list',
+    'DROP TABLE IF EXISTS products'
 ];
 
 export default () => {
 
-connection.transaction(
-    tx => {
-        sql.map(sql=>
-            tx.executeSql(sql)
-        )
-      
-    }, (error) => {
-        console.log("error call back : " + JSON.stringify(error));
-        console.log(error);
-    }, () => {
-        console.log("transaction complete call back ");
-    });
+    const init = ():Promise<boolean> =>{
 
-    connection.transaction(tx => {
-    tx.executeSql(`select * from 'list'`, [], (_, { rows }) => {
-        console.log(rows)
-    }), (sqlError) => {
-        console.log(sqlError);
-    }}, (txError) => {
-    console.log(txError);
-})
+        return new Promise((resolve, reject) => {
+            connection.transaction(
+                tx => {
+                    sql.map(sql=>
+                        tx.executeSql(sql)
+                    )
+                
+                }, (error) => {
+                    console.log("error call back : " + JSON.stringify(error));
+                    reject(false);
+                }, () => {
+                    console.log("Init tables");
+            });
 
+            resolve(true);
+        });
+        
+    }
+
+    const reset = async ():Promise<boolean> =>{
+
+        connection.transaction(
+            tx => {
+                sqlReset.map(sql=>
+                    tx.executeSql(sql)
+                )
+              
+            }, (error) => {
+                console.log("error call back : " + JSON.stringify(error));
+                console.log(error);
+            }, () => {
+                console.log("Tables dropped");
+            });
+        await init();
+        return true;
+    }
+
+
+    return {init, reset};
 }

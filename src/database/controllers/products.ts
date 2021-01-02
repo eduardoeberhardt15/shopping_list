@@ -1,19 +1,18 @@
 import connection from '../connection';
 
-interface list{
-    id:number,
-    status:number,
-    date:Date,
-    user:string
+interface products{
+    id?:number,
+    name:string,
+    category:string
 }
 
 export default () => {
 
-    const insert = ():Promise<number> => {
+    const insert = ({name, category}:products):Promise<number> => {
 
         return new Promise((resolve, reject) => {
             connection.transaction(tx => {
-                tx.executeSql(`insert into list values (null, 0, '${new Date()}', 1)`, [], 
+                tx.executeSql(`insert into products values (null, '${name}', '${category}' )`, [], 
                 function(tx, res) {
                     resolve(res.insertId);
                 }), 
@@ -32,11 +31,11 @@ export default () => {
 
     }
 
-    const getAll = ():Promise<list[]> => {
+    const getAll = ():Promise<products[]> => {
 
         return new Promise((resolve, reject) => {
             connection.transaction(tx => {
-                tx.executeSql(`select * from 'list'`, [], (_, { rows }) => {
+                tx.executeSql(`select * from 'products'`, [], (_, { rows }) => {
                     //@ts-ignore
                     resolve(rows["_array"] || [])
                 }), (sqlError:any) => {
@@ -50,13 +49,13 @@ export default () => {
 
     }
 
-    const findById = (id:number):Promise<list> => {
+    const findByListId = (id:number):Promise<products[]> => {
 
         return new Promise((resolve, reject) => {
             connection.transaction(tx => {
-                tx.executeSql(`select * from list where id=?`, [id], (_, { rows }) => {
+                tx.executeSql(`select * from products where list=?`, [id], (_, { rows }) => {
                     //@ts-ignore
-                    resolve(rows["_array"][0] || {})
+                    resolve(rows["_array"] || [])
                 }), (sqlError:any) => {
                     console.log(sqlError);
                     reject(sqlError)
@@ -68,5 +67,5 @@ export default () => {
 
     }
 
-    return {insert, update, getAll, findById};
+    return {insert, update, getAll, findByListId};
 }

@@ -1,19 +1,19 @@
 import connection from '../connection';
 
-interface list{
-    id:number,
-    status:number,
-    date:Date,
-    user:string
+interface list_item{
+    id?:number,
+    name:number,
+    price:number,
+    list:number
 }
 
 export default () => {
 
-    const insert = ():Promise<number> => {
+    const insert = ({name, price, list}:list_item):Promise<number> => {
 
         return new Promise((resolve, reject) => {
             connection.transaction(tx => {
-                tx.executeSql(`insert into list values (null, 0, '${new Date()}', 1)`, [], 
+                tx.executeSql(`insert into list_item values (null, '${name}', ${price}, ${list})`, [], 
                 function(tx, res) {
                     resolve(res.insertId);
                 }), 
@@ -32,11 +32,11 @@ export default () => {
 
     }
 
-    const getAll = ():Promise<list[]> => {
+    const getAll = ():Promise<list_item[]> => {
 
         return new Promise((resolve, reject) => {
             connection.transaction(tx => {
-                tx.executeSql(`select * from 'list'`, [], (_, { rows }) => {
+                tx.executeSql(`select * from 'list_item'`, [], (_, { rows }) => {
                     //@ts-ignore
                     resolve(rows["_array"] || [])
                 }), (sqlError:any) => {
@@ -50,13 +50,16 @@ export default () => {
 
     }
 
-    const findById = (id:number):Promise<list> => {
+    const findByListId = (id:number):Promise<list_item[]> => {
 
         return new Promise((resolve, reject) => {
             connection.transaction(tx => {
-                tx.executeSql(`select * from list where id=?`, [id], (_, { rows }) => {
+                tx.executeSql(`
+                select * from list_item li
+                LEFT JOIN products p
+                ON li.name = p.id where li.list=?`, [id], (_, { rows }) => {
                     //@ts-ignore
-                    resolve(rows["_array"][0] || {})
+                    resolve(rows["_array"] || [])
                 }), (sqlError:any) => {
                     console.log(sqlError);
                     reject(sqlError)
@@ -68,5 +71,5 @@ export default () => {
 
     }
 
-    return {insert, update, getAll, findById};
+    return {insert, update, getAll, findByListId};
 }

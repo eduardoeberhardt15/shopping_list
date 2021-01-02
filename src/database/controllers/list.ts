@@ -16,5 +16,35 @@ export default () => {
         });
     }
 
-    return {insert};
+    const update = () => {
+
+    }
+
+    const getAll = () => {
+
+        connection.transaction(tx => {
+            tx.executeSql(`select * from 'list'`, [], (_, { rows }) => {
+                console.log(rows)
+            }), (sqlError) => {
+                console.log(sqlError);
+            }}, (txError) => {
+            console.log(txError);
+        })
+
+    }
+
+    const findById = (id:string) => {
+
+        connection.transaction(tx => {
+            tx.executeSql(`select * from list where id=?`, [id], (_, { rows }) => {
+                console.log(rows)
+            }), (sqlError) => {
+                console.log(sqlError);
+            }}, (txError) => {
+            console.log(txError);
+        })
+
+    }
+
+    return {insert, update, getAll, findById};
 }

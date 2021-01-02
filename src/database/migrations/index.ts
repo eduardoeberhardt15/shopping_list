@@ -1,11 +1,21 @@
 import connection from '../connection';
 
 const sql = [
-    'DROP TABLE IF EXISTS list',
     'DROP TABLE IF EXISTS list_item',
-    'create table if not exists list (id integer primary key autoincrement);',
-    'create table if not exists list_item (id integer primary key autoincrement, name text, item int, foreign key (item) references list (id));',
-    "insert into list_item (name) values ('arroz')"
+    'DROP TABLE IF EXISTS list',
+    `create table if not exists list (
+        id integer primary key autoincrement,
+        status int,
+        date datetime,
+        user text);`,
+    `create table if not exists list_item (
+        id integer primary key autoincrement, 
+        name text, 
+        price double, 
+        list int, 
+        foreign key (list) references list (id));`,
+    `insert into list values (null, 0, '${new Date()}', 1)`,
+    "insert into list_item values (null, 'arroz', 15.5, 1)"
 ];
 
 export default () => {
@@ -24,7 +34,7 @@ connection.transaction(
     });
 
     connection.transaction(tx => {
-    tx.executeSql(`select * from 'list_item'`, [], (_, { rows }) => {
+    tx.executeSql(`select * from 'list'`, [], (_, { rows }) => {
         console.log(rows)
     }), (sqlError) => {
         console.log(sqlError);

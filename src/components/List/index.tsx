@@ -11,22 +11,26 @@ import { Ionicons } from '@expo/vector-icons';
 interface StateProps{
     data:reducers,
     removeTodo:(dispatch:{})=>void,
-    updateTodo:(dispatch:{})=>void
+    updateTodo:(dispatch:{})=>void,
+    listId:number
   }
 
-const List = ({removeTodo, updateTodo, data}:StateProps) => { 
+const List = ({removeTodo, updateTodo, data, listId}:StateProps) => {
 
     function completeTask(id:number){
+        const item = data.reducerMain.data.find(item => item.id===id);
+
         updateTodo({
             id,
-        
+            list:listId,
+            complete: item.complete ? 0 : 1
         });
     }
 
     function removeTask(id:number){
         removeTodo({
             id,
-        
+            list:listId
         });
     }
 
@@ -47,7 +51,7 @@ const List = ({removeTodo, updateTodo, data}:StateProps) => {
                 <TouchableOpacity style={{}} 
                 onPress={()=>completeTask(item.id)}
                 hitSlop={{ top: 20, bottom: 20, left: 50, right: 50 }}>
-                    <Text style={item.complete? {textDecorationLine: 'line-through'}: null}>{item.text}</Text>
+                    <Text style={item.complete? {textDecorationLine: 'line-through'}: null}>{item.name}</Text>
                     
                 </TouchableOpacity>
                 <TouchableOpacity style={{}} 

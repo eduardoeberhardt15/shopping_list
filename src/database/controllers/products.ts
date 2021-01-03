@@ -1,9 +1,10 @@
 import connection from '../connection';
 
-interface products{
-    id?:number,
+export interface products{
+    id:number,
     name:string,
-    category:string
+    category?:string,
+    complete?: boolean,
 }
 
 export default () => {
@@ -49,6 +50,24 @@ export default () => {
 
     }
 
+    const findByName = (name:string):Promise<products[]> => {
+
+        return new Promise((resolve, reject) => {
+            connection.transaction(tx => {
+                tx.executeSql(`select * from products where name like ? ORDER BY name ASC`, [`%${name}%`], (_, { rows }) => {
+                    //@ts-ignore
+                    resolve(rows["_array"] || [])
+                }), (sqlError:any) => {
+                    console.log(sqlError);
+                    reject(sqlError)
+                }}, (txError) => {
+                    console.log(txError);
+                    reject(txError)
+            })
+        });
+
+    }
+
     const findByListId = (id:number):Promise<products[]> => {
 
         return new Promise((resolve, reject) => {
@@ -67,5 +86,5 @@ export default () => {
 
     }
 
-    return {insert, update, getAll, findByListId};
+    return {insert, update, getAll, findByListId, findByName};
 }

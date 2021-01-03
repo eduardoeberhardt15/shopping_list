@@ -2,8 +2,9 @@ import {Reducer} from 'redux';
 
 export interface IList{
     id: number,
-    text:string,
+    name:string,
     complete?:boolean,
+    list:number,
     value?:number
 }
 export interface IState{
@@ -14,7 +15,7 @@ export interface IState{
 
 const INITIAL_STATE:IState={
 
-    data:[{id:0, text:"teste", value:0, complete:false}],
+    data:[],
     error:false,
     loading:false
 };
@@ -27,6 +28,8 @@ export const Types={
     ADD_TODO:"ADD_TODO",
     UPDATE_TODO:"UPDATE_TODO",
     REMOVE_TODO:"REMOVE_TODO",
+    GET_LIST:"GET_LIST",
+    GET_LIST_ASYNC:"GET_LIST_ASYNC",
 }
 
 export type typeActions = 

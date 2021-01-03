@@ -1,7 +1,7 @@
 import { all, takeLatest } from 'redux-saga/effects';
 
 import { Types } from '../reducers/mainReducer';
-import { addTodo, load, updateTodo, deleteTodo } from './sagas';
+import { addTodo, load, updateTodo, deleteTodo, getListAsync } from './sagas';
 
 export default function* rootSaga() {
   return yield all([
@@ -9,5 +9,6 @@ export default function* rootSaga() {
     takeLatest(Types.ADD_TODO, addTodo),
     takeLatest(Types.UPDATE_TODO, updateTodo),
     takeLatest(Types.REMOVE_TODO, deleteTodo),
+    takeLatest(Types.GET_LIST_ASYNC, getListAsync),
   ]);
 }

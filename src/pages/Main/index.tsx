@@ -1,54 +1,80 @@
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import {format, parse} from 'date-fns';
 
 import {Ionicons} from '@expo/vector-icons';
 import styles from './styles';
+import {Container, Content, Row, Column, TransparentButton, Title, SubTitle, NormalText} from '../../styles/styled';
 
 import migrations from '../../database/migrations';
 import productsController from '../../database/controllers/products';
-import listController from '../../database/controllers/list';
+import listController, {list} from '../../database/controllers/list';
 import listItemController from '../../database/controllers/list_item';
 
 const Main: React.FC = () => {
 
     const navigation = useNavigation();
+    const [list, setList] = useState<list[]>([]);
 
-    function navigateToListCreation(){
-        navigation.navigate('ListCreation',{osId:""});
+    const navigateToListCreation = async (id:number) => {
+
+        navigation.navigate('ListCreation',{listId: id});
         
       }
 
+    const navigateToNewListCreation = async () => {
+
+    const listId = await listController().insert();
+    //init();
+    navigation.navigate('ListCreation',{listId});
+    
+    }
+
     useEffect(()=>{
-       init();
-        
+        (async () =>{
+          // await migrations().reset();
+           
+        })()
     },[]);
 
+    useFocusEffect(
+        React.useCallback(() => {
+            init();
+        },[])
+      );
+
     const init = async () => {
-        await migrations().init();
         
-        //const controller = await productsController().insert({name:"Banana", category:"Fruta"});
-       //console.log(controller);
-        //await listController().insert();
-        //const controller1 = await listItemController().insert({name:1, price:4.10, list:1})
-        /*const controller2 = await listItemController().findByListId(1);
-        console.log(controller2);
-        const controller3 = await productsController().getAll();
-        console.log(controller3);
-        */
+        const list = await listController().getAllOpen();
+        setList(list);
+       
         }
 
     return( 
-        <View style={styles.container}>
+        <Container>
             <StatusBar style="auto" />
-            <TouchableOpacity style={styles.btnCriar}
-            onPress={()=>navigateToListCreation()}>
-                <Text style={styles.textCriar}>Criar Lista de Compras</Text>
-                <Ionicons name="ios-add-circle" size={24} color="blue" />
-            </TouchableOpacity>
-          
-        </View>
+            <Content>
+                
+                <TransparentButton style={{paddingVertical:40}}
+                 onPress={navigateToNewListCreation}>
+                    <Title >Criar Lista de Compras</Title>
+                    <Ionicons name="ios-add-circle" size={36} color="blue" />
+                </TransparentButton>
+
+                {list.map((list, index) =>
+                    <TransparentButton style={{paddingVertical:5}}
+                     onPress={()=>navigateToListCreation(list.id)} key={index}>
+                         <Row>
+                            <SubTitle>{`${list.name || "Lista"} - `}</SubTitle>
+                            <SubTitle>{format(new Date(list.date), 'dd/MMM HH:mm')}</SubTitle>
+                         </Row>
+                        
+                    </TransparentButton>
+                )}
+                </Content>
+        </Container>
         );
 }
 

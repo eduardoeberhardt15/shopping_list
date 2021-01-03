@@ -2,11 +2,11 @@ import {StyleSheet} from "react-native";
 
 const styles = StyleSheet.create({
     container: {
-        width:"80%",
+        width:"90%",
     },
 
     flatList:{
-        width:"80%",
+        width:"90%",
         marginTop:2,
     },
 
@@ -14,15 +14,15 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         alignItems:"center",
         justifyContent:"space-between",
+        width: "90%"
     },
 
     textSearch:{
-        width:"80%",
+        width:"90%",
         borderColor: "black",
         borderWidth:1,
         borderRadius:8,
         padding:5,
-        paddingLeft:15,
         marginRight:15,
     },
 

@@ -33,3 +33,15 @@ export const removeTodo = (todo:any) =>{
         }
     )
 }
+
+export const getList = (listId:number) =>{
+    
+    return(
+        {
+            type:"GET_LIST_ASYNC",
+            payload:{
+                data:listId
+            }
+        }
+    )
+}

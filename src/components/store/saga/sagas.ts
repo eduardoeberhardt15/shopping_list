@@ -1,5 +1,7 @@
 import { call, put, select } from 'redux-saga/effects';
 import { Types, IList } from '../reducers/mainReducer';
+
+import listItemController from '../../../database/controllers/list_item';
 //import api from '../../../services/api';
 
 //import { loadSuccess, loadFailure } from './actions';
@@ -28,9 +30,11 @@ export function* addTodo(arg:any) {
   }
 }
 
-export function* updateTodo(arg:any) { 
+export function* updateTodo(arg:any) {
   try {
     
+    const controller = listItemController();
+
     yield put({type: "LOAD_REQUEST"});
     let datas:IList[] = yield select(reducer =>reducer.reducerMain.data); 
     
@@ -41,6 +45,8 @@ export function* updateTodo(arg:any) {
       return data;
     }); 
     
+    yield call(controller.update, arg.payload.data);
+
    yield put({type:Types.LOAD_SUCCESS, payload:{data: [...datas]}});
   } catch (err) {
     yield put({type: "LOAD_FAILURE"});
@@ -50,6 +56,7 @@ export function* updateTodo(arg:any) {
 export function* deleteTodo(arg:any) { 
   try {
     
+    const controller = listItemController();
     yield put({type: "LOAD_REQUEST"});
     let datas:IList[] = yield select(reducer =>reducer.reducerMain.data); 
     
@@ -60,7 +67,23 @@ export function* deleteTodo(arg:any) {
       
     }); 
 
+    yield call(controller.deleteItem, arg.payload.data);
+
    yield put({type:Types.LOAD_SUCCESS, payload:{data: [...datas]}});
+  } catch (err) {
+    yield put({type: "LOAD_FAILURE"});
+  }
+}
+
+export function* getListAsync(arg:any) { 
+  try {
+    
+    const controller = listItemController();
+    yield put({type: "LOAD_REQUEST"});
+    let datas:IList[] = [];
+    
+    datas= yield call(controller.findByListId, arg.payload.data); 
+    yield put({type:Types.LOAD_SUCCESS, payload:{data: [...datas]}});
   } catch (err) {
     yield put({type: "LOAD_FAILURE"});
   }

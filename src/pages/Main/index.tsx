@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import { View, Text, TouchableOpacity} from 'react-native';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {format, parse} from 'date-fns';
 
 import {Ionicons} from '@expo/vector-icons';
 import styles from './styles';
-import {Container, Content, Row, Column, TransparentButton, Title, SubTitle, NormalText} from '../../styles/styled';
+import {Container, Content, Row, TransparentButton, Input, Title, SubTitle, colors} from '../../styles/styled';
+
+import Header from '../../components/Header';
+import Modal from '../../components/Modal';
 
 import migrations from '../../database/migrations';
 import productsController from '../../database/controllers/products';
@@ -17,6 +19,7 @@ const Main: React.FC = () => {
 
     const navigation = useNavigation();
     const [list, setList] = useState<list[]>([]);
+    const [showModal, setShowModal] = useState(false);
 
     const navigateToListCreation = async (id:number) => {
 
@@ -26,10 +29,10 @@ const Main: React.FC = () => {
 
     const navigateToNewListCreation = async () => {
 
-    const listId = await listController().insert();
+    /*const listId = await listController().insert();
     //init();
-    navigation.navigate('ListCreation',{listId});
-    
+    navigation.navigate('ListCreation',{listId});*/
+        setShowModal(true);
     }
 
     useEffect(()=>{
@@ -54,13 +57,12 @@ const Main: React.FC = () => {
 
     return( 
         <Container>
-            <StatusBar style="auto" />
+            <Header />
             <Content>
-                
-                <TransparentButton style={{paddingVertical:40}}
+
+                <TransparentButton style={styles.btnCriar}
                  onPress={navigateToNewListCreation}>
-                    <Title >Criar Lista de Compras</Title>
-                    <Ionicons name="ios-add-circle" size={36} color="blue" />
+                    <Ionicons name="ios-add-circle" size={48} color={colors.header} />
                 </TransparentButton>
 
                 {list.map((list, index) =>
@@ -73,6 +75,10 @@ const Main: React.FC = () => {
                         
                     </TransparentButton>
                 )}
+
+                <Modal show={showModal} setShow={setShowModal}>
+                    <Input placeholder="Digite o nome da Lista" style={{width:"100%"}}/>
+                </Modal>
                 </Content>
         </Container>
         );

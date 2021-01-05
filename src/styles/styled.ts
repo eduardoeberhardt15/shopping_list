@@ -154,3 +154,4 @@ export const ImageWithBackground = styled.Image<IDimension & IColor>`
     background-color: ${props => props.color || "#e1e4e8"};
 `;
 
+export {color as colors, Constants as constants, metrics, fonts};

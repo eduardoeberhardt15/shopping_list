@@ -9,6 +9,7 @@ import {reducers} from "../../components/store/reducers";
 
 import styles from './styles';
 import {Container, Content, Row, Column, Input, TransparentButton, SubTitle, NormalText} from '../../styles/styled';
+import Header from '../../components/Header';
 import AutoCompleteSelect from '../../components/AutoCompleteSelect';
 import List from '../../components/List';
 
@@ -56,6 +57,7 @@ const ListCreation = ({removeTodo, data, getList}:StateProps) => {
   return( 
   
     <Container>
+      <Header />
       <Content>
 
         <Input 

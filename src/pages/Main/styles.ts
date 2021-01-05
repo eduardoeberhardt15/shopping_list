@@ -10,7 +10,9 @@ const styles = StyleSheet.create({
     },
 
     btnCriar:{
-      flexDirection:"row",
+      position: 'absolute',
+      right:20,
+      bottom:20
     },
 
     textCriar:{

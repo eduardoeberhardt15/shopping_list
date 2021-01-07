@@ -11,8 +11,8 @@ const styles = StyleSheet.create({
 
     btnCriar:{
       position: 'absolute',
-      right:20,
-      bottom:20
+      right:40,
+      bottom:40
     },
 
     textCriar:{

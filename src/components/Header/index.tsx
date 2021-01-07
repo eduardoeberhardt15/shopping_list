@@ -21,9 +21,7 @@ export interface IMessage{
 }
 interface IProps{
 
-    budget?:boolean,
     title?:string,
-    fReturn?:(position:number)=>void,
     message?:IMessage,
     goBack?: boolean
 }
@@ -32,7 +30,7 @@ export interface IRef{
     active:boolean
 }
 
- const Header:React.ForwardRefRenderFunction<IRef, IProps> = ({budget, title, fReturn, message, goBack}, ref) =>{
+ const Header:React.ForwardRefRenderFunction<IRef, IProps> = ({title, message, goBack}, ref) =>{
 
     const navigation = useNavigation();
     const [active, setActive] = useState(true);
@@ -46,22 +44,6 @@ export interface IRef{
         navigation.openDrawer();
     }
 
-    async function changeProfile(position:number){
-
-        setActive(position===1?true:false);
-        await AsyncStorage.setItem("supply", position+"");
-        if(fReturn)fReturn(position);
-    }
-
-    useEffect(()=>{
-        (async()=>{
-            if(budget){
-                const position = await AsyncStorage.getItem("supply");
-                setActive(position==='1'?true:false);
-                if(fReturn)fReturn(Number(position));
-            }
-        })();
-    },[])
 
     useEffect(()=>{
         if(message?.show)setShow(true);
@@ -94,7 +76,7 @@ export interface IRef{
     }
 
     return(
-        <View style={[styles.container, (budget || goBack) && {justifyContent:"space-between"}]}>
+        <View style={[styles.container, goBack && {justifyContent:"space-between"}]}>
             <StatusBar style="auto" backgroundColor={colors.header} />
             <AwesomeAlert
                 show={show}
@@ -119,21 +101,7 @@ export interface IRef{
                         message.fReturn();
                 }}
             />
-            {budget && <>
-            <TouchableOpacity onPress={()=>changeProfile(1)}>
-                <Text style={[styles.text, {paddingLeft:10},
-                    active && styles.active]}>Profissional</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={()=>(changeProfile(2))}>
-                <Text style={[styles.text, {paddingRight:20},
-                    !active && styles.active]}>Cliente</Text>
-            </TouchableOpacity>
-            </>}
-
-            {title &&
-            <Text style={styles.text}>{title}</Text>
-            }
+            
 
             {goBack &&
             <TouchableOpacity onPress={goToBackScreen}>
@@ -141,6 +109,10 @@ export interface IRef{
                 style={[styles.icon, {paddingLeft:10}]}/>
             </TouchableOpacity>
             }
+            
+            {title &&
+            <Text style={styles.text}>{title}</Text>
+            }           
 
             <TouchableOpacity onPress={handleOpenDrawer}>
            <Ionicons size={36} name='ios-menu' color='white' style={styles.icon}/>

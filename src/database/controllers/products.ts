@@ -68,6 +68,24 @@ export default () => {
 
     }
 
+    const findByCategory = (category:number):Promise<products[]> => {
+
+        return new Promise((resolve, reject) => {
+            connection.transaction(tx => {
+                tx.executeSql(`select * from products where category = ? ORDER BY name ASC`, [category], (_, { rows }) => {
+                    //@ts-ignore
+                    resolve(rows["_array"] || [])
+                }), (sqlError:any) => {
+                    console.log(sqlError);
+                    reject(sqlError)
+                }}, (txError) => {
+                    console.log(txError);
+                    reject(txError)
+            })
+        });
+
+    }
+
     const findByListId = (id:number):Promise<products[]> => {
 
         return new Promise((resolve, reject) => {
@@ -86,5 +104,5 @@ export default () => {
 
     }
 
-    return {insert, update, getAll, findByListId, findByName};
+    return {insert, update, getAll, findByListId, findByName, findByCategory};
 }

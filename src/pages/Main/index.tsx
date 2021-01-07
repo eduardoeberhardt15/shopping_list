@@ -5,7 +5,7 @@ import {format, parse} from 'date-fns';
 
 import {Ionicons} from '@expo/vector-icons';
 import styles from './styles';
-import {Container, Content, Row, TransparentButton, Input, Title, SubTitle, colors} from '../../styles/styled';
+import {Container, Content, Row, TransparentButton, Input, Button, TextButton, Title, SubTitle, colors, metrics} from '../../styles/styled';
 
 import Header from '../../components/Header';
 import Modal from '../../components/Modal';
@@ -20,6 +20,7 @@ const Main: React.FC = () => {
     const navigation = useNavigation();
     const [list, setList] = useState<list[]>([]);
     const [showModal, setShowModal] = useState(false);
+    const [listName, setListName] = useState("");
 
     const navigateToListCreation = async (id:number) => {
 
@@ -29,15 +30,15 @@ const Main: React.FC = () => {
 
     const navigateToNewListCreation = async () => {
 
-    /*const listId = await listController().insert();
+    const listId = await listController().insert(listName);
     //init();
-    navigation.navigate('ListCreation',{listId});*/
-        setShowModal(true);
+    navigation.navigate('ListCreation',{listId});
+        setShowModal(false);
     }
 
     useEffect(()=>{
         (async () =>{
-          // await migrations().reset();
+          //await migrations().reset();
            
         })()
     },[]);
@@ -60,9 +61,12 @@ const Main: React.FC = () => {
             <Header />
             <Content>
 
+                {list.length===0 &&
+                <Title>Adicione uma lista de compras</Title>}
+
                 <TransparentButton style={styles.btnCriar}
-                 onPress={navigateToNewListCreation}>
-                    <Ionicons name="ios-add-circle" size={48} color={colors.header} />
+                 onPress={()=>setShowModal(true)}>
+                    <Ionicons name="ios-add-circle" size={metrics.rem*64} color={colors.header} />
                 </TransparentButton>
 
                 {list.map((list, index) =>
@@ -77,7 +81,11 @@ const Main: React.FC = () => {
                 )}
 
                 <Modal show={showModal} setShow={setShowModal}>
-                    <Input placeholder="Digite o nome da Lista" style={{width:"100%"}}/>
+                    <Input placeholder="Digite o nome da Lista" style={{width:"100%"}}
+                        value={listName} onChangeText={setListName}/>
+                    <Button onPress={navigateToNewListCreation} style={{width:"100%"}}>
+                        <TextButton>Criar</TextButton>
+                    </Button>
                 </Modal>
                 </Content>
         </Container>

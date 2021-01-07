@@ -33,7 +33,7 @@ const ListCreation = ({removeTodo, data, getList}:StateProps) => {
   const route = useRoute<RouteProp<ParamList, 'Detail'>>();
   const listId = route.params.listId;
   const controller = listController();
-  const [listName, setListName] = useState("");
+  const [listName, setListName] = useState("Lista");
   const [listNameFocus, setListNameFocus] = useState(false);
 
   useEffect(()=>{
@@ -45,29 +45,17 @@ const ListCreation = ({removeTodo, data, getList}:StateProps) => {
   useEffect(()=>{
     (async ()=>{
       const list = await controller.findById(listId);
-      setListName(list?.name || "");
+      setListName(list?.name || "Lista");
     })();
   },[]);
 
-  const changeListName = () => {
-    controller.update({id:listId, name:listName});
-    setListNameFocus(false);
-  }
 
   return( 
   
     <Container>
-      <Header />
-      <Content>
+      <Header goBack title={listName}/>
+      <Content startAlign paddingTop={40}>
 
-        <Input 
-          placeholder="Editar nome da Lista"
-          value={listName}
-          onChangeText={text => setListName(text)}
-          onBlur={changeListName}
-          onFocus={()=>setListNameFocus(true)}
-          style={!listNameFocus && {borderColor:"transparent"}}
-        />
         <AutoCompleteSelect listId={listId}/>
         <List listId={listId}/>
         

@@ -97,7 +97,7 @@ export const TextButton = styled.Text<IColor>`
 
 export const Input = styled.TextInput<IDimension>`
 
-    width:${props => props.width || "90%"};
+    width:${props => props.width || "85%"};
     height:${props => props.height || "50px"};
     border: solid 1px ${color.backgroundLight};
     border-radius:8px;

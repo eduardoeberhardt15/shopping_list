@@ -13,6 +13,7 @@ export default () => {
     const query = (sql:string):Promise<list[]> => {
 
         return new Promise((resolve, reject) => {
+            
             connection.transaction(tx => {
                 tx.executeSql(sql, [], (_, { rows }) => {
                     //@ts-ignore
@@ -28,11 +29,11 @@ export default () => {
 
     }
 
-    const insert = ():Promise<number> => {
+    const insert = (name:string):Promise<number> => {
 
         return new Promise((resolve, reject) => {
             connection.transaction(tx => {
-                tx.executeSql(`insert into list values (null, 0, '${new Date()}', 1, '')`, [], 
+                tx.executeSql(`insert into list values (null, 0, '${new Date()}', 1, '${name}')`, [], 
                 function(tx, res) {
                     resolve(res.insertId);
                 }), 
@@ -93,7 +94,7 @@ export default () => {
 
         const sql = "SELECT * FROM list WHERE status = 0";
         const list = await query(sql);
-        return list;
+        return list ? list : [];
     }
 
     const getAllClosed = async():Promise<list[]> => {

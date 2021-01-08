@@ -59,8 +59,8 @@ const Shopping = ({removeTodo, data, getList}:StateProps) => {
         <List listId={listId} mode={1}/>
         
       </Content>
-      <Bottom>
-          <Text>R${data.reducerMain.total.toFixed(2)}</Text>
+      <Bottom style={{alignItems:"center", justifyContent:"center"}}>
+          <Text style={{fontSize:22}}>Total - R${data.reducerMain.total.toFixed(2)}</Text>
       </Bottom>
     </Container>
   

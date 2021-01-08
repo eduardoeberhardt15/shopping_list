@@ -79,7 +79,7 @@ const List = ({removeTodo, updateTodo, data, listId, mode}:StateProps) => { cons
                     </TouchableOpacity>
                 :
                     <>
-                    <Amount itemId={item.id} listId={listId} amount={1}/>
+                    <Amount itemId={item.id} listId={listId} amount={item?.amount || 1}/>
                     <Price itemId={item.id} listId={listId} price={String(item?.price) || ""}/>
                     </>
                 }

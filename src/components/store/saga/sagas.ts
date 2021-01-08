@@ -93,11 +93,11 @@ export function* updateTodoAmount(arg:any) {
       return data;
     }); 
     
-    //yield call(controller.update, arg.payload.data);
+    yield call(controller.update, arg.payload.data);
 
-    //const total = yield getTotalAsync(arg.payload.data.list); 
+    const total = yield getTotalAsync(arg.payload.data.list); 
 
-   yield put({type:Types.LOAD_SUCCESS, payload:{data: [...datas]}});
+   yield put({type:Types.LOAD_SUCCESS, payload:{data: [...datas], total}});
   } catch (err) {
     yield put({type: "LOAD_FAILURE"});
   }

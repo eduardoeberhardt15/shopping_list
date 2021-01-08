@@ -59,7 +59,7 @@ export const reducer:Reducer<IState, IAction> = (state= INITIAL_STATE, action:IA
         case "LOAD_REQUEST": 
             return { ...state, loading:true};
 
-        case "LOAD_SUCCESS": 
+        case "LOAD_SUCCESS":
             return { ...state, loading:false, error:false, 
                 data:action.payload.data,
                 total: action.payload.total ? action.payload.total : state.total

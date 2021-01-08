@@ -30,12 +30,13 @@ export default () => {
         });
     }
 
-    const update = ({id, list, price, complete=0}:Partial<list_item>) => { 
+    const update = ({id, list, price, complete=0, amount}:Partial<list_item>) => { 
 
         const defaultQuery = "UPDATE list_item SET";
         const endQuery = `WHERE id = ${id} AND list = ${list}`;
         const sql:string[] = [];
         if(price) sql.push(`${defaultQuery} price = '${price}' ${endQuery}`);
+        if(amount) sql.push(`${defaultQuery} amount = '${amount}' ${endQuery}`);
         sql.push(`${defaultQuery} complete = '${complete}' ${endQuery}`);
 
         return new Promise((resolve, reject) => {
@@ -95,7 +96,7 @@ export default () => {
         return new Promise((resolve, reject) => {
             connection.transaction(tx => {
                 tx.executeSql(`
-                select li.id, p.name, li.list, li.price, li.complete from list_item li
+                select li.id, p.name, li.list, li.price, li.amount, li.complete from list_item li
                 LEFT JOIN products p
                 ON li.name = p.id where li.list=?`, [id], (_, { rows }) => {
                     //@ts-ignore
@@ -111,16 +112,18 @@ export default () => {
 
     }
 
-    const totalPriceById = (id:number):Promise<list_item[]> => {
+    const totalPriceById = (id:number, complete?:number):Promise<list_item[]> => {
 
         return new Promise((resolve, reject) => {
             connection.transaction(tx => {
                 tx.executeSql(`
-                select sum(li.price) as total from list_item li
+                select sum(li.price*li.amount) as total from list_item li
                 LEFT JOIN products p
-                ON li.name = p.id where li.list=?`, [id], (_, { rows }) => {
+                ON li.name = p.id where li.list=? and li.complete=?`, [id, complete || 0], (_, { rows }) => {
+                    
                     //@ts-ignore
-                    resolve(rows["_array"][0].total || {})
+                    resolve(rows["_array"][0].total || 0);
+                    
                 }), (sqlError:any) => {
                     console.log(sqlError);
                     reject(sqlError)

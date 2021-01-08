@@ -1,7 +1,13 @@
 {
   "expo": {
-    "name": "shopping_list",
-    "slug": "shopping_list",
+    "name": "Lista de compras compartilhada",
+    "slug": "shoppinglist",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "privacy": "public",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,7 +23,32 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "eberhart.shoppinglist",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
+    },
+    "android": {
+      
+      "useNextNotificationsApi": true,
+      "package": "eberhart.shoppinglist",
+      "versionCode":1,
+
+      "permissions": [
+        "CAMERA",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "READ_INTERNAL_STORAGE",
+        "VIBRATE",
+        "WAKE_LOCK",
+        "READ_PHONE_STATE",
+        "com.google.android.c2dm.permission.RECEIVE"
+      ]
+    },
+    "androidStatusBar": {
+      "translucent": true,
+      "barStyle": "light-content"
     },
     "web": {
       "favicon": "./assets/favicon.png"

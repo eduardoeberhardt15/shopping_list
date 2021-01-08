@@ -283,7 +283,7 @@ export default () => {
             }, () => {
                 console.log("Tables dropped");
             });
-        await init();
+        //await init();
         return true;
     }
 

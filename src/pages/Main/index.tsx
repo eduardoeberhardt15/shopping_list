@@ -41,7 +41,7 @@ const Main: React.FC = () => {
 
     useEffect(()=>{
         (async () =>{
-          //await migrations().reset();
+          await migrations().init();
            
         })()
     },[]);

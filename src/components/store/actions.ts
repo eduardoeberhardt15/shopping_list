@@ -22,6 +22,18 @@ export const updateTodo = (todo:any) =>{
     )
 }
 
+export const updateTodoPrice = (todo:any) =>{
+    
+    return(
+        {
+            type:"UPDATE_TODO_PRICE",
+            payload:{
+                data:todo
+            }
+        }
+    )
+}
+
 export const removeTodo = (todo:any) =>{
     
     return(

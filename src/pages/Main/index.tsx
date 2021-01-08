@@ -4,7 +4,8 @@ import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {format, parse} from 'date-fns';
 
 import {Ionicons} from '@expo/vector-icons';
-import styles from './styles';
+import { AntDesign } from '@expo/vector-icons';
+import styles, {ButtonView} from './styles';
 import {Container, Content, Row, TransparentButton, Input, Button, TextButton, Title, SubTitle, colors, metrics} from '../../styles/styled';
 
 import Header from '../../components/Header';
@@ -22,9 +23,11 @@ const Main: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
     const [listName, setListName] = useState("");
 
-    const navigateToListCreation = async (id:number) => {
+    const navigateToListCreation = async (id:number, action:number) => {
 
-        navigation.navigate('ListCreation',{listId: id});
+        if(action===0)
+            navigation.navigate('ListCreation',{listId: id});
+        else navigation.navigate('Shopping',{listId: id});
         
       }
 
@@ -70,14 +73,22 @@ const Main: React.FC = () => {
                 </TransparentButton>
 
                 {list.map((list, index) =>
-                    <TransparentButton style={{paddingVertical:5}}
-                     onPress={()=>navigateToListCreation(list.id)} key={index}>
+                    <ButtonView style={{paddingVertical:5}}
+                      key={index}>
                          <Row>
                             <SubTitle>{`${list.name || "Lista"} - `}</SubTitle>
                             <SubTitle>{format(new Date(list.date), 'dd/MMM HH:mm')}</SubTitle>
                          </Row>
+                         <Row align="space-around">
+                             <TransparentButton onPress={()=>navigateToListCreation(list.id, 0)}>
+                                <AntDesign name="edit" size={metrics.rem*36} color={colors.header} />
+                            </TransparentButton>
+                            <TransparentButton onPress={()=>navigateToListCreation(list.id, 1)}>
+                                <Ionicons name="ios-cart" size={metrics.rem*36} color={colors.header} />
+                            </TransparentButton>
+                         </Row>
                         
-                    </TransparentButton>
+                    </ButtonView>
                 )}
 
                 <Modal show={showModal} setShow={setShowModal}>

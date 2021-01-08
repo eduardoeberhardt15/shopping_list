@@ -8,6 +8,8 @@ import store from "./components/store";
 import DragMenu from './pages/DragMenu';
 import Main from "./pages/Main";
 import ListCreation from "./pages/ListCreation";
+import Shopping from './pages/Shopping';
+
 const AppStack = createStackNavigator();
 
 const Drawer = createDrawerNavigator();
@@ -22,6 +24,7 @@ export default function Routes(){
             
                     <Drawer.Screen name="Main" component={Main} />
                     <Drawer.Screen name="ListCreation" component={ListCreation} options={{unmountOnBlur:true}}/>
+                    <Drawer.Screen name="Shopping" component={Shopping} options={{unmountOnBlur:true}}/>
                     
                 </Drawer.Navigator>
             </Provider>

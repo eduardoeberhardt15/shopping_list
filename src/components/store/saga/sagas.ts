@@ -53,6 +53,31 @@ export function* updateTodo(arg:any) {
   }
 }
 
+export function* updateTodoPrice(arg:any) {
+  try {
+    
+    const controller = listItemController();
+
+    yield put({type: "LOAD_REQUEST"});
+    let datas:IList[] = yield select(reducer =>reducer.reducerMain.data); 
+    let total:number = yield select(reducer =>reducer.reducerMain.total); 
+    
+    datas= datas.map(data=> { 
+      if(data.id===arg.payload.data.id){
+        data.price=arg.payload.data.price
+        total+=arg.payload.data.price
+      }
+      return data;
+    }); 
+    
+    yield call(controller.update, arg.payload.data);
+
+   yield put({type:Types.LOAD_SUCCESS, payload:{data: [...datas], total}});
+  } catch (err) {
+    yield put({type: "LOAD_FAILURE"});
+  }
+}
+
 export function* deleteTodo(arg:any) { 
   try {
     

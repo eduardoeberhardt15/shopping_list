@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 import * as actions from '../../components/store/actions';
 import {reducers} from "../../components/store/reducers";
 
-import styles from './styles';
+import {Bottom} from './styles';
 import {Container, Content, Row, Column, Input, TransparentButton, SubTitle, NormalText} from '../../styles/styled';
 import Header from '../../components/Header';
 import AutoCompleteSelect from '../../components/AutoCompleteSelect';
@@ -28,7 +28,8 @@ type ParamList = {
   };
 };
 
-const ListCreation = ({removeTodo, data, getList}:StateProps) => { 
+const Shopping = ({removeTodo, data, getList}:StateProps) => { console.log(data);
+
 
   const route = useRoute<RouteProp<ParamList, 'Detail'>>();
   const listId = route.params.listId;
@@ -56,10 +57,12 @@ const ListCreation = ({removeTodo, data, getList}:StateProps) => {
       <Header goBack title={listName}/>
       <Content startAlign paddingTop={40}>
 
-        <AutoCompleteSelect listId={listId}/>
-        <List listId={listId} mode={0}/>
+        <List listId={listId} mode={1}/>
         
       </Content>
+      <Bottom>
+          <Text>R${data.reducerMain.total.toFixed(2)}</Text>
+      </Bottom>
     </Container>
   
   );
@@ -76,4 +79,4 @@ const mapStateToProps = (state:reducers) =>({
     getList: (listId:number) => dispatch(actions.getList(listId))
   });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListCreation);
+export default connect(mapStateToProps, mapDispatchToProps)(Shopping);

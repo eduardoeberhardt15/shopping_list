@@ -4,6 +4,7 @@ interface list_item{
     id?:number,
     name_id:number,
     price:number,
+    amount?: number,
     list:number,
     complete?: boolean
 }
@@ -14,7 +15,7 @@ export default () => {
 
         return new Promise((resolve, reject) => {
             connection.transaction(tx => {
-                tx.executeSql(`insert into list_item values (null, '${name_id}', ${price}, ${list}, 0)`, [], 
+                tx.executeSql(`insert into list_item values (null, '${name_id}', ${price}, 1, ${list}, 0)`, [], 
                 function(tx, res) {
                     resolve(res.insertId);
                 }), 
@@ -29,7 +30,7 @@ export default () => {
         });
     }
 
-    const update = ({id, list, price, complete=false}:Partial<list_item>) => {
+    const update = ({id, list, price, complete=0}:Partial<list_item>) => { 
 
         const defaultQuery = "UPDATE list_item SET";
         const endQuery = `WHERE id = ${id} AND list = ${list}`;
@@ -110,5 +111,26 @@ export default () => {
 
     }
 
-    return {insert, update, getAll, findByListId, deleteItem};
+    const totalPriceById = (id:number):Promise<list_item[]> => {
+
+        return new Promise((resolve, reject) => {
+            connection.transaction(tx => {
+                tx.executeSql(`
+                select sum(li.price) as total from list_item li
+                LEFT JOIN products p
+                ON li.name = p.id where li.list=?`, [id], (_, { rows }) => {
+                    //@ts-ignore
+                    resolve(rows["_array"][0].total || {})
+                }), (sqlError:any) => {
+                    console.log(sqlError);
+                    reject(sqlError)
+                }}, (txError) => {
+                    console.log(txError);
+                    reject(txError)
+            })
+        });
+
+    }
+
+    return {insert, update, getAll, findByListId, deleteItem, totalPriceById};
 }

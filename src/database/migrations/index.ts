@@ -23,6 +23,7 @@ const sql = [
         id integer primary key autoincrement, 
         name int, 
         price double, 
+        amount double,
         list int, 
         complete boolean,
         foreign key (list) references list (id),

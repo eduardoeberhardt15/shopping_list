@@ -28,14 +28,13 @@ type ParamList = {
   };
 };
 
-const Shopping = ({removeTodo, data, getList}:StateProps) => { console.log(data);
+const Shopping = ({removeTodo, data, getList}:StateProps) => { 
 
 
   const route = useRoute<RouteProp<ParamList, 'Detail'>>();
   const listId = route.params.listId;
   const controller = listController();
   const [listName, setListName] = useState("Lista");
-  const [listNameFocus, setListNameFocus] = useState(false);
 
   useEffect(()=>{
     (async ()=>{

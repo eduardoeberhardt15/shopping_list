@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import { Dispatch } from 'redux';
 import {connect} from 'react-redux';
 import * as actions from '../store/actions';
@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { metrics } from '../../styles';
 
 import Price from './Price';
+import Amount from './Amount';
 
 interface StateProps{
     data:reducers,
@@ -19,7 +20,8 @@ interface StateProps{
     mode:number // 0 remove, 1 complete
   }
 
-const List = ({removeTodo, updateTodo, data, listId, mode}:StateProps) => {
+const List = ({removeTodo, updateTodo, data, listId, mode}:StateProps) => { console.log(data);
+
 
     function completeTask(id:number){
        
@@ -40,9 +42,10 @@ const List = ({removeTodo, updateTodo, data, listId, mode}:StateProps) => {
     }
 
     return (
+        <ScrollView style={styles.container}>
         <FlatList
         data={data.reducerMain.data}
-        style={styles.container}
+        
         keyExtractor={item=>item.id.toString()}
         /*numColumns={2}
         showsVerticalScrollIndicator={false}*/
@@ -75,12 +78,16 @@ const List = ({removeTodo, updateTodo, data, listId, mode}:StateProps) => {
                         <Ionicons name="ios-trash" size={18} color="black" />
                     </TouchableOpacity>
                 :
-                    <Price itemId={item.id} listId={listId}/>
+                    <>
+                    <Amount itemId={item.id} listId={listId} amount={1}/>
+                    <Price itemId={item.id} listId={listId} price={String(item?.price) || ""}/>
+                    </>
                 }
             </View>
             );
         }}
     />
+    </ScrollView>
     );
 
   

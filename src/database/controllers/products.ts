@@ -3,7 +3,7 @@ import connection from '../connection';
 export interface products{
     id:number,
     name:string,
-    category?:string,
+    category?:number,
     complete?: boolean,
 }
 
@@ -13,7 +13,7 @@ export default () => {
 
         return new Promise((resolve, reject) => {
             connection.transaction(tx => {
-                tx.executeSql(`insert into products values (null, '${name}', '${category}' )`, [], 
+                tx.executeSql(`insert into products values (null, '${name}', ${category} )`, [], 
                 function(tx, res) {
                     resolve(res.insertId);
                 }), 

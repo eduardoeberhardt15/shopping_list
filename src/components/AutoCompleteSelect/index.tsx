@@ -35,44 +35,35 @@ interface StateProps{
  
 const AutoCompleteSelect = ({addTodo, data, listId}:StateProps) =>{ 
 
-  const [dataList, setDataList] = useState<{label:string, value:number}[]>([]);
-  const [inputText, setInputText] = useState<products & {list:number}>({id:0, name:"", list:0});
-  const [dropOpen, setDropOpen] = useState(false);
-  const [categoryList, setCategoryList] = useState<{label:string, value:number}[]>([]);
-  const [category, setCategory] = useState<number | null>(null);
-  const [product, setProduct] = useState<number | null>(null);
+  const [dataList, setDataList] = useState<products[]>([]);
+  const [list, setList] = useState<products[]>([]);
+  const [searchText, setSearchText] = useState("");
 
-  let dropDownController1, dropDownController2;
+  async function search(text:string){
 
-  useEffect(()=>{
-    (async () => {
-      const c = await categoryController().getAll();
-      const l = c.map(list => {
-        return {
-          label: list.name,
-          value: list.id
-        }
-      });
-      setCategoryList(l);
-    })();
-    
-  },[]);
+    setSearchText(text);
 
-  useEffect(()=>{
-    dropDownController1?.reset();
-    dropDownController2?.open();
-  },[dataList]);
+    text=text.toLowerCase();
+    if(text.length===3) await searchProductsDB(text);
+    if(text.length>3){
+
+      const data = list.filter(l=>
+        l.name.toLowerCase().normalize("NFD").replace(/[^a-zA-Zs]/g, "")
+        .indexOf(text.toLowerCase().normalize("NFD").replace(/[^a-zA-Zs]/g, ""))>=0
+      );
+      setDataList(data);
+    }
+    else if(text.length<=2){
+      setDataList([]);
+    }
+
+  }
   
-  const searchProductsDB = async (category:number) => {
-    const list = await productsController().findByCategory(category);
-    const l = list.map(list => {
-      return {
-       
-        label: list.name,
-        value: list.id
-      }
-    });
+  const searchProductsDB = async (name:string) => {
+    const l = await productsController().findByName(name)
+   
     setDataList(l);
+    setList(l);
     return true;
   } 
 
@@ -89,71 +80,44 @@ const AutoCompleteSelect = ({addTodo, data, listId}:StateProps) =>{
         list:listId,
         complete:false,
       });
-      dropDownController2?.reset();
+ 
       setDataList([]);
-      //setTimeout(()=>{dropDownController1?.reset();},2000)
   }
 
-  const handleSelected = (value:number) => {
-    setCategory(value);
-    searchProductsDB(value);
-  }
-
-  const handleSetSelected = (value:number, label:string) => {
-    
-    addNewTodo(value, label);
-    setProduct(value);
+  const newProduct = async () =>{
+  
+    const id = await productsController().insert({name:searchText, category:11, id:0});
+    addNewTodo(id, searchText);
+    setSearchText("");
   }
 
   return(
     <View style={styles.container}>
-      
-       {dataList.length===0 ?
-       <DropDownPicker
-          items={[
-              
-            ...categoryList
-          ]}
-          defaultValue={category}
-          containerStyle={{height: 50}}
-          style={[{backgroundColor: '#fafafa', width:"100%", marginTop:9}, dropOpen && {display:"none"}]}
-          itemStyle={{
-              justifyContent: 'flex-start'
-          }}
-          dropDownStyle={{backgroundColor: '#fafafa', width:"100%", minHeight:200}}
-          onChangeItem={item => handleSelected(item.value)}
-          onOpen={()=>setDropOpen(true)}
-          onClose={()=>setDropOpen(false)}
-          searchable
-          searchablePlaceholder="Digite a categoria"
-          placeholder="Selecione a Categoria"
-          searchableError={() => <Text>Categoria Inexistente</Text>}
-          controller={instance => dropDownController1 = instance}
-        />
-        :
-        <DropDownPicker
-          items={[
-              
-            ...dataList
-          ]}
-          defaultValue={product}
-          containerStyle={{height: 50}}
-          style={[{backgroundColor: '#fafafa', width:"100%", marginTop:9}]}
-          itemStyle={{
-              justifyContent: 'flex-start'
-          }}
-          dropDownStyle={{backgroundColor: '#fafafa', width:"100%", minHeight:200}}
-          onChangeItem={item => handleSetSelected(item.value, item.label)}
-          onOpen={()=>setDropOpen(true)}
-          onClose={()=>setDropOpen(false)}
-          searchable
-          searchablePlaceholder="Digite o produto"
-          placeholder="Agora selecione o produto"
-          searchableError={() => <Text>Produto Inexistente</Text>}
-          controller={instance => dropDownController2 = instance}
-          
-        />
+      <View style={styles.content}>
+      <TextInput 
+        placeholder="Digite o produto"
+        value={searchText}
+        onChangeText={search}
+        style={styles.inputSearch}
+        returnKeyType="search"
+        keyboardType="default"
+      />
+      <View style={{position:"relative", width: "100%"}}>
+        <ScrollView style={[styles.scroll, 
+          (dataList.length>0 || (dataList.length===0 && searchText.length>=3)) && {paddingBottom:10}]}>
+        {dataList.map((item, index) =>
+          <TouchableOpacity key={index} style={styles.item} onPress={()=>addNewTodo(item.id, item.name)}>
+            <Text style={styles.text}>{item.name}</Text>
+          </TouchableOpacity>
+        )}
+        {(dataList.length===0 && searchText.length>=3) &&
+          <TouchableOpacity style={styles.item} onPress={newProduct}>
+            <Text style={styles.text}>{searchText}<Text style={styles.newItem}> - novo item</Text></Text>
+          </TouchableOpacity>
         }
+        </ScrollView>
+      </View>
+      </View>
        
     </View>
   );

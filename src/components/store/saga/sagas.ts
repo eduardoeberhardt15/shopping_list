@@ -2,6 +2,7 @@ import { call, put, select } from 'redux-saga/effects';
 import { Types, IList } from '../reducers/mainReducer';
 
 import listItemController from '../../../database/controllers/list_item';
+import productController from '../../../database/controllers/products';
 //import api from '../../../services/api';
 
 //import { loadSuccess, loadFailure } from './actions';
@@ -98,6 +99,31 @@ export function* updateTodoAmount(arg:any) {
     const total = yield getTotalAsync(arg.payload.data.list); 
 
    yield put({type:Types.LOAD_SUCCESS, payload:{data: [...datas], total}});
+  } catch (err) {
+    yield put({type: "LOAD_FAILURE"});
+  }
+}
+
+export function* updateTodoFavorite(arg:any) { 
+
+  try {
+    
+    const controller = productController();
+
+    yield put({type: "LOAD_REQUEST"});
+    let datas:IList[] = yield select(reducer =>reducer.reducerMain.data); 
+    
+    datas= datas.map(data=> { 
+      if(data.id===arg.payload.data.id){
+        data.favorite= arg.payload.data.favorite
+      }
+      return data;
+    }); 
+    console.log("payload", arg.payload.data);
+    yield call(controller.update, arg.payload.data);
+
+
+   yield put({type:Types.LOAD_SUCCESS, payload:{data: [...datas]}});
   } catch (err) {
     yield put({type: "LOAD_FAILURE"});
   }

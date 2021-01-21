@@ -96,7 +96,7 @@ export default () => {
         return new Promise((resolve, reject) => {
             connection.transaction(tx => {
                 tx.executeSql(`
-                select li.id, p.name, li.list, li.price, li.amount, li.complete from list_item li
+                select li.id, p.name, li.list, li.price, li.amount, li.complete, p.favorite, p.id as productId from list_item li
                 LEFT JOIN products p
                 ON li.name = p.id where li.list=?`, [id], (_, { rows }) => {
                     //@ts-ignore

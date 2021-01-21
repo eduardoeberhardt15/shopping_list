@@ -11,16 +11,18 @@ import { metrics } from '../../styles';
 
 import Price from './Price';
 import Amount from './Amount';
+import {AirbnbRating} from 'react-native-ratings';
 
 interface StateProps{
     data:reducers,
     removeTodo:(dispatch:{})=>void,
     updateTodo:(dispatch:{})=>void,
+    updateFavorite:(dispatch:{})=>void,
     listId:number,
     mode:number // 0 remove, 1 complete
   }
 
-const List = ({removeTodo, updateTodo, data, listId, mode}:StateProps) => { console.log(data);
+const List = ({removeTodo, updateTodo, updateFavorite, data, listId, mode}:StateProps) => { console.log(data);
 
 
     function completeTask(id:number){
@@ -39,6 +41,16 @@ const List = ({removeTodo, updateTodo, data, listId, mode}:StateProps) => { cons
             id,
             list:listId
         });
+    }
+
+    function handleUpdateFavorite(id:number, favorite:boolean, productId:number){
+        
+        updateFavorite({
+            id,
+            favorite: !favorite,
+            productId
+        });
+        
     }
 
     return (
@@ -68,7 +80,16 @@ const List = ({removeTodo, updateTodo, data, listId, mode}:StateProps) => { cons
                     </TouchableOpacity>
                 :
                     <View style={{}}>
-                        <Text style={{fontSize:metrics.rem*16}}>{item.name}</Text> 
+                        <TouchableOpacity style={{flexDirection:"row"}} 
+                            onPress={()=>handleUpdateFavorite(item.id, item.favorite || false, item.productId)}>
+                            <Text style={{fontSize:metrics.rem*16}}>{item.name}</Text>
+                            <AirbnbRating defaultRating={item.favorite ? 1 : 0}
+                            isDisabled
+                            showRating={false}
+                            count={1}
+                            size={metrics.rem*20}
+                            />
+                        </TouchableOpacity> 
                     </View>
                 }
                 {mode===0 ?
@@ -100,6 +121,7 @@ const mapStateToProps = (state:reducers) =>({
   const mapDispatchToProps = (dispatch:Dispatch) =>({
     removeTodo: (todo:any) => dispatch(actions.removeTodo(todo)),
     updateTodo: (todo:any) => dispatch(actions.updateTodo(todo)),
+    updateFavorite: (todo:any) => dispatch(actions.updateTodoFavorite(todo)),
   });
 
 export default connect(mapStateToProps, mapDispatchToProps)(List);

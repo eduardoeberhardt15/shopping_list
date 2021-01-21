@@ -4,7 +4,7 @@ export interface products{
     id:number,
     name:string,
     category?:number,
-    complete?: boolean,
+    favorite?: boolean
 }
 
 export default () => {
@@ -13,7 +13,7 @@ export default () => {
 
         return new Promise((resolve, reject) => {
             connection.transaction(tx => {
-                tx.executeSql(`insert into products values (null, '${name}', ${category} )`, [], 
+                tx.executeSql(`insert into products values (null, '${name}', 0, ${category} )`, [], 
                 function(tx, res) {
                     resolve(res.insertId);
                 }), 
@@ -28,8 +28,28 @@ export default () => {
         });
     }
 
-    const update = () => {
+    const update = ({favorite, productId}:Partial<products>) => {
 
+        const defaultQuery = "UPDATE products SET";
+        const endQuery = `WHERE id = ${productId}`;
+        const sql:string[] = [];
+        //if(price) sql.push(`${defaultQuery} price = '${price}' ${endQuery}`);
+        sql.push(`${defaultQuery} favorite = '${favorite ? 1 : 0}' ${endQuery}`);       
+
+        return new Promise((resolve, reject) => {
+            connection.transaction(tx => {
+                sql.map(sql=>
+                tx.executeSql(sql, [], (_, { rowsAffected }) => {
+                    //@ts-ignore
+                    resolve(rowsAffected || 0)
+                })), (sqlError:any) => {
+                    console.log(sqlError);
+                    reject(sqlError)
+                }}, (txError) => {
+                    console.log(txError);
+                    reject(txError)
+            })
+        });
     }
 
     const getAll = ():Promise<products[]> => {
@@ -68,11 +88,13 @@ export default () => {
 
     }
 
-    const findByCategory = (category:number):Promise<products[]> => {
+    const findByCategory = (category:string):Promise<products[]> => {
 
         return new Promise((resolve, reject) => {
             connection.transaction(tx => {
-                tx.executeSql(`select * from products where category = ? ORDER BY name ASC`, [category], (_, { rows }) => {
+                tx.executeSql(`SELECT p.id, p.name, p.favorite, c.name as category FROM products p 
+                    LEFT JOIN category c ON p.category=c.id
+                    WHERE c.name like ? ORDER BY p.name ASC`, [`%${category}%`], (_, { rows }) => {
                     //@ts-ignore
                     resolve(rows["_array"] || [])
                 }), (sqlError:any) => {

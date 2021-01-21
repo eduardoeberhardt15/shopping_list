@@ -43,19 +43,23 @@ const styles = StyleSheet.create({
     content:{
         backgroundColor:"white",
         width: "100%",
-        maxHeight:300,
-        flexWrap:"wrap",
-        flexDirection:"column",
-        overflow:"scroll",
+       
     },
     scroll:{
         width: "100%",
         backgroundColor:"white",
-      
+        maxHeight:130,
+        flexWrap:"wrap",
+        flexDirection:"column",
+        overflow:"scroll",
     },
     item:{
         paddingLeft: 10,
         paddingTop:10,
+        flexDirection:"row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        width: "100%"
     },
     newItem:{
         fontSize:16,

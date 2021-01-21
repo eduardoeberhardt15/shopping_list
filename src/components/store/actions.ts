@@ -46,6 +46,18 @@ export const updateTodoAmount = (todo:any) =>{
     )
 }
 
+export const updateTodoFavorite = (todo:any) =>{
+    
+    return(
+        {
+            type:"UPDATE_TODO_FAVORITE",
+            payload:{
+                data:todo
+            }
+        }
+    )
+}
+
 export const removeTodo = (todo:any) =>{
     
     return(

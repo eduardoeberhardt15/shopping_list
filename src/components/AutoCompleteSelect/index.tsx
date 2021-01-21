@@ -3,9 +3,9 @@
  */
 
 import React, {useState, useEffect, useCallback} from "react";
-import {View, Text, TextInput, FlatList, TouchableOpacity, ActivityIndicator, ScrollView, Platform} from "react-native";
+import {View, Text, TextInput, FlatList, TouchableOpacity, ActivityIndicator, ScrollView, Keyboard} from "react-native";
 import {Ionicons} from '@expo/vector-icons';
-import DropDownPicker, {DropDownPickerProps} from 'react-native-dropdown-picker';
+import {AirbnbRating} from 'react-native-ratings';
 import { Dispatch } from 'redux';
 import {connect} from 'react-redux';
 import * as actions from '../store/actions';
@@ -62,10 +62,24 @@ const AutoCompleteSelect = ({addTodo, data, listId}:StateProps) =>{
   const searchProductsDB = async (name:string) => {
     const l = await productsController().findByName(name)
    
+    if(l.length===0){
+      await searchProductsByCategory(name);
+      return;
+    }
     setDataList(l);
     setList(l);
     return true;
   } 
+
+  const searchProductsByCategory = async (category:string) => {
+    const l = await productsController().findByCategory(category);
+   
+    setDataList(l);
+    setList(l);
+    setSearchText(l[0].category+"" || category); 
+    Keyboard.dismiss();
+    return true;
+  }
 
   async function addNewTodo(value:number, label:string){
       
@@ -82,13 +96,13 @@ const AutoCompleteSelect = ({addTodo, data, listId}:StateProps) =>{
       });
  
       setDataList([]);
+      setSearchText("");
   }
 
   const newProduct = async () =>{
   
     const id = await productsController().insert({name:searchText, category:11, id:0});
     addNewTodo(id, searchText);
-    setSearchText("");
   }
 
   return(
@@ -108,6 +122,12 @@ const AutoCompleteSelect = ({addTodo, data, listId}:StateProps) =>{
         {dataList.map((item, index) =>
           <TouchableOpacity key={index} style={styles.item} onPress={()=>addNewTodo(item.id, item.name)}>
             <Text style={styles.text}>{item.name}</Text>
+            <AirbnbRating defaultRating={item.favorite ? 1 : 0}
+            isDisabled
+            showRating={false}
+            count={1}
+            size={metrics.rem*20}
+            />
           </TouchableOpacity>
         )}
         {(dataList.length===0 && searchText.length>=3) &&

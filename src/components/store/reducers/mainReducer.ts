@@ -7,6 +7,8 @@ export interface IList{
     list:number,
     price?:number,
     amount?:number,
+    favorite?: boolean,
+    productId: number
 }
 export interface IState{
     data:IList[],
@@ -32,6 +34,7 @@ export const Types={
     UPDATE_TODO:"UPDATE_TODO",
     UPDATE_TODO_PRICE:"UPDATE_TODO_PRICE",
     UPDATE_TODO_AMOUNT:"UPDATE_TODO_AMOUNT",
+    UPDATE_TODO_FAVORITE:"UPDATE_TODO_FAVORITE",
     REMOVE_TODO:"REMOVE_TODO",
     GET_LIST:"GET_LIST",
     GET_LIST_ASYNC:"GET_LIST_ASYNC",

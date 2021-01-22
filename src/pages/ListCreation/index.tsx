@@ -12,6 +12,7 @@ import {Container, Content, Row, Column, Input, TransparentButton, SubTitle, Nor
 import Header from '../../components/Header';
 import AutoCompleteSelect from '../../components/AutoCompleteSelect';
 import List from '../../components/List';
+import Favorites from 'components/ImportFavorite';
 
 import listController, {list} from '../../database/controllers/list';
 import listItemController from '../../database/controllers/list_item';
@@ -54,8 +55,9 @@ const ListCreation = ({removeTodo, data, getList}:StateProps) => {
   
     <Container>
       <Header goBack title={listName}/>
-      <Content startAlign paddingTop={40}>
+      <Content startAlign paddingTop={10}>
 
+        <Favorites listId={listId}/>
         <AutoCompleteSelect listId={listId}/>
         <List listId={listId} mode={0}/>
         

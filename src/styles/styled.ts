@@ -154,4 +154,10 @@ export const ImageWithBackground = styled.Image<IDimension & IColor>`
     background-color: ${props => props.color || "#e1e4e8"};
 `;
 
+export const Scroll = styled.ScrollView.attrs({
+    contentContainerStyle:{ flex:1, padding:10}
+})`
+    margin:10;
+`;
+
 export {color as colors, Constants as constants, metrics, fonts};

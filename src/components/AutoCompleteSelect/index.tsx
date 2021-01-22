@@ -81,20 +81,25 @@ const AutoCompleteSelect = ({addTodo, data, listId}:StateProps) =>{
     return true;
   }
 
-  async function addNewTodo(value:number, label:string){
+  async function addNewTodo(value:number, label:string, favorite: boolean){
       
-      const id = await listItemController().insert({
-        name_id:value,
-        list:listId,
-        price:0,
-      });
-     
-      addTodo({id, 
-        name:label,
-        list:listId,
-        complete:false,
-      });
- 
+    const founded = data.reducerMain.data.find(item => item.name===label)
+
+      if(!founded){
+        const id = await listItemController().insert({
+          name_id:value,
+          list:listId,
+          price:0,
+        });
+      
+        addTodo({id, 
+          name:label,
+          list:listId,
+          complete:false,
+          favorite
+        });
+      }
+
       setDataList([]);
       setSearchText("");
   }
@@ -102,7 +107,7 @@ const AutoCompleteSelect = ({addTodo, data, listId}:StateProps) =>{
   const newProduct = async () =>{
   
     const id = await productsController().insert({name:searchText, category:11, id:0});
-    addNewTodo(id, searchText);
+    addNewTodo(id, searchText, false);
   }
 
   return(
@@ -120,7 +125,7 @@ const AutoCompleteSelect = ({addTodo, data, listId}:StateProps) =>{
         <ScrollView style={[styles.scroll, 
           (dataList.length>0 || (dataList.length===0 && searchText.length>=3)) && {paddingBottom:10}]}>
         {dataList.map((item, index) =>
-          <TouchableOpacity key={index} style={styles.item} onPress={()=>addNewTodo(item.id, item.name)}>
+          <TouchableOpacity key={index} style={styles.item} onPress={()=>addNewTodo(item.id, item.name, item.favorite)}>
             <Text style={styles.text}>{item.name}</Text>
             <AirbnbRating defaultRating={item.favorite ? 1 : 0}
             isDisabled

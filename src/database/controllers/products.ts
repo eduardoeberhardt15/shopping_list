@@ -70,6 +70,24 @@ export default () => {
 
     }
 
+    const getFavorite = ():Promise<products[]> => {
+
+        return new Promise((resolve, reject) => {
+            connection.transaction(tx => {
+                tx.executeSql(`SELECT * FROM 'products' WHERE favorite= '1'`, [], (_, { rows }) => {
+                    //@ts-ignore
+                    resolve(rows["_array"] || [])
+                }), (sqlError:any) => {
+                    console.log(sqlError);
+                    reject(sqlError)
+                }}, (txError) => {
+                    console.log(txError);
+                    reject(txError)
+            })
+        });
+
+    }
+
     const findByName = (name:string):Promise<products[]> => {
 
         return new Promise((resolve, reject) => {
@@ -126,5 +144,5 @@ export default () => {
 
     }
 
-    return {insert, update, getAll, findByListId, findByName, findByCategory};
+    return {insert, update, getAll, findByListId, findByName, findByCategory, getFavorite};
 }

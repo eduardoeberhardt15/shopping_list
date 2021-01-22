@@ -58,7 +58,7 @@ const List = ({removeTodo, updateTodo, updateFavorite, data, listId, mode}:State
         <FlatList
         data={data.reducerMain.data}
         
-        keyExtractor={item=>item.id.toString()}
+        keyExtractor={item=>item.name}
         /*numColumns={2}
         showsVerticalScrollIndicator={false}*/
         /*onEndReached={loadData}

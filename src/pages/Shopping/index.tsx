@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 
 import { Dispatch } from 'redux';
@@ -28,7 +28,7 @@ type ParamList = {
   };
 };
 
-const Shopping = ({removeTodo, data, getList}:StateProps) => { 
+const Shopping = ({removeTodo, data, getList}:StateProps) => {
 
 
   const route = useRoute<RouteProp<ParamList, 'Detail'>>();
@@ -50,29 +50,35 @@ const Shopping = ({removeTodo, data, getList}:StateProps) => {
   },[]);
 
 
-  return( 
-  
-    <Container>
-      <Header goBack title={listName}/>
-      <Content startAlign paddingTop={40}>
+  return(
 
-        <List listId={listId} mode={1}/>
-        
-      </Content>
-      <Bottom style={{alignItems:"center", justifyContent:"center"}}>
-          <Text style={{fontSize:22}}>Total - R${data.reducerMain.total.toFixed(2)}</Text>
-      </Bottom>
-    </Container>
-  
+    <TouchableWithoutFeedback
+        enableOnAndroid
+        accessible={false}
+       onPress={()=>Keyboard.dismiss()}
+    >
+      <Container>
+        <Header goBack title={listName}/>
+        <Content startAlign paddingTop={40}>
+
+          <List listId={listId} mode={1}/>
+
+        </Content>
+        <Bottom style={{alignItems:"center", justifyContent:"center"}}>
+            <Text style={{fontSize:22}}>Total - R${data.reducerMain.total.toFixed(2)}</Text>
+        </Bottom>
+
+      </Container>
+    </TouchableWithoutFeedback>
   );
 
-  
+
 }
 
 const mapStateToProps = (state:reducers) =>({
     data:state
   });
-  
+
   const mapDispatchToProps = (dispatch:Dispatch) =>({
     removeTodo: (todo:any) => dispatch(actions.addTodo(todo)),
     getList: (listId:number) => dispatch(actions.getList(listId))

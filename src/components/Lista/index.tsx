@@ -1,60 +1,58 @@
-import React , {useRef} from 'react';
-import {connect} from 'react-redux';
-import { Dispatch } from 'redux';
+import React, { useRef } from "react";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
 
-import {reducers} from "../store/reducers";
-import {IState} from "../store/reducers/mainReducer";
-import * as actions from '../store/actions';
+import { reducers } from "../store/reducers";
+import { IState } from "../store/reducers/mainReducer";
+import * as actions from "../store/actions";
 
-import './styles.css';
+import "./styles.css";
 
-interface StateProps{
-    data:reducers,
-    addTodo:(dispatch:{})=>void
+interface StateProps {
+  data: reducers;
+  addTodo: (dispatch: string) => void;
 }
 
+function Todo({ addTodo, data }: StateProps) {
+  const datas: IState = data.reducerMain;
 
-function Todo({addTodo, data}:StateProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
 
-    const datas:IState = data.reducerMain;
-
-    const inputRef = useRef<HTMLInputElement>(null);
-
-    function handleEnterKey(key:String):void{
-        if(key==="Enter"){
-            if(inputRef.current?.value!=null && inputRef.current?.value!==""){
-                addTodo(inputRef.current?.value);
-                inputRef.current.value="";
-            }
-                
-        }
+  function handleEnterKey(key: string): void {
+    if (key === "Enter") {
+      if (inputRef.current?.value != null && inputRef.current?.value !== "") {
+        addTodo(inputRef.current?.value);
+        inputRef.current.value = "";
+      }
     }
+  }
 
-  return( 
+  return (
     <div className="divTodo">
+      <h2>Todo List</h2>
 
-        <h2>Todo List</h2>
-
-        <input type="text" 
+      <input
+        type="text"
         ref={inputRef}
-        onKeyPress={(e)=>handleEnterKey(e.key)}/>
-        {!datas.loading && !datas.error?
+        onKeyPress={(e) => handleEnterKey(e.key)}
+      />
+      {!datas.loading && !datas.error ? (
         <ul>
-            {datas.data.map((value, index)=>(
-                <li key={index}>{value}</li>
-            ))}
+          {datas.data.map((value, index) => (
+            <li key={index}>{value}</li>
+          ))}
         </ul>
-        : null }
+      ) : null}
     </div>
   );
 }
 
-const mapStateToProps = (state:reducers) =>({
-    data: state
+const mapStateToProps = (state: reducers) => ({
+  data: state,
 });
 
-const mapDispatchToProps = (dispatch:Dispatch) =>({
-    addTodo: (todo:any) => dispatch(actions.addTodo(todo))
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  addTodo: (todo: any) => dispatch(actions.addTodo(todo)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Todo);

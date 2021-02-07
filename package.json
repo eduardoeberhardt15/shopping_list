@@ -71,6 +71,12 @@
     "prettier": "^2.2.1",
     "typescript": "~3.9.5"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run eslint:check",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
   "private": true,
   "config": {
     "commitizen": {

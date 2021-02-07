@@ -58,7 +58,7 @@ export interface IRef{
                 e.preventDefault();
             
                 
-        })};
+        })}
     },[]);
 
     const goToBackScreen = () => {

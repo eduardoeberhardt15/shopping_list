@@ -45,7 +45,7 @@ export default () => {
     const defaultQuery = "UPDATE list_item SET";
     const endQuery = `WHERE id = ${id} AND list = ${list}`;
     const sql: string[] = [];
-    if (price != null || price != undefined)
+    if (price != null && price != undefined)
       sql.push(`${defaultQuery} price = '${price}' ${endQuery}`);
     if (amount) sql.push(`${defaultQuery} amount = '${amount}' ${endQuery}`);
     sql.push(`${defaultQuery} complete = '${complete}' ${endQuery}`);

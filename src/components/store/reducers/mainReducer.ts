@@ -65,7 +65,7 @@ export const reducer: Reducer<IState, IAction> = (
         error: false,
         data: action.payload.data,
         total:
-          action.payload.total !== null || action.payload.total != undefined
+          action.payload.total !== null && action.payload.total != undefined
             ? action.payload.total
             : state.total,
       };
